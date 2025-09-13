@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Reflection?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1058.0" prefWidth="1522.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.serverfinalproject.HelloController">
+  <tabs>
+    <Tab text="Profile">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: black;">
+               <children>
+                  <Button fx:id="connectButton" layoutX="160.0" layoutY="670.0" mnemonicParsing="false" onAction="#handleConnectButton" text="connect" />
+                  <TextField fx:id="portTextField" layoutX="85.0" layoutY="707.0" prefHeight="25.0" prefWidth="81.0" text="2015" />
+                  <Label layoutX="89.0" layoutY="663.0" text="Port:" textFill="WHITE">
+                     <font>
+                        <Font size="28.0" />
+                     </font></Label>
+                  <Label fx:id="gamesWonL" layoutX="950.0" layoutY="289.0" text="Games Won:" textFill="#00ff7b">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="486.0" layoutY="91.0" text="Undercover">
+                     <font>
+                        <Font size="96.0" />
+                     </font>
+                     <textFill>
+                        <LinearGradient endX="1.0">
+                           <stops>
+                              <Stop>
+                                 <color>
+                                    <Color red="0.7171052694320679" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="1.0">
+                                 <color>
+                                    <Color red="1.0" green="1.0" blue="1.0" />
+                                 </color>
+                              </Stop>
+                           </stops>
+                        </LinearGradient>
+                     </textFill>
+                  </Label>
+                  <Label layoutX="943.0" layoutY="187.0" text="Game" textFill="#ff7373">
+                     <font>
+                        <Font size="54.0" />
+                     </font>
+                  </Label>
+                  <TextArea layoutX="282.0" layoutY="268.0" prefHeight="238.0" prefWidth="649.0" text="Message from the Higher Ups:&#10;You have been selected to complete a Undercover mission.&#10;You must eliminate your enemy before they get to you...&#10;Good Luck and try not to get uncovered.">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </TextArea>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Untitled Tab 1">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1044.0" prefWidth="1522.0" style="-fx-background-color: beige;">
+               <children>
+                  <ImageView fx:id="mapIV" fitHeight="544.0" fitWidth="987.0" layoutY="244.0" pickOnBounds="true" preserveRatio="true" />
+                  <Line endX="113.424560546875" endY="140.74777221679688" layoutX="281.0" layoutY="408.0" startX="7.7499847412109375" startY="71.0" strokeWidth="4.0" />
+                  <Line endX="274.75" endY="7.62939453125E-6" layoutX="266.0" layoutY="283.0" startX="-67.25" startY="51.99998474121094" strokeWidth="4.0" />
+                  <Line endX="-69.25" endY="93.99998474121094" layoutX="550.0" layoutY="296.0" startX="-8.542877197265625" startY="-13.70709228515625" strokeWidth="4.0" />
+                  <Line endX="225.75" endY="54.99998474121094" layoutX="255.0" layoutY="335.0" startX="-56.95710754394531" startY="0.7070770263671875" strokeWidth="4.0" />
+                  <Line endX="48.45709228515625" endY="-50.29292297363281" layoutX="433.0" layoutY="441.0" startX="-144.25001525878906" startY="38.0" strokeWidth="4.0" />
+                  <Line endX="133.49212646484375" endY="12.27984619140625" fill="#84ff0000" layoutX="475.0" layoutY="525.0" startX="-78.02700805664062" startY="23.747772216796875" strokeWidth="4.0" />
+                  <Line endX="234.75003051757812" endY="220.0" layoutX="120.0" layoutY="457.0" startX="29.75000762939453" startY="65.0" strokeWidth="4.0" />
+                  <Line endX="-74.12863159179688" endY="-239.12135314941406" layoutX="557.0" layoutY="627.0" startX="50.75006103515625" startY="-90.0" strokeWidth="4.0" />
+                  <Line endX="165.424560546875" endY="75.02197265625" layoutX="229.0" layoutY="475.0" startX="-79.24999237060547" startY="47.0" strokeWidth="4.0" />
+                  <Line endX="-75.30123901367188" endY="-222.25222778320312" layoutX="471.0" layoutY="771.0" startX="-116.24996948242188" startY="-94.0" strokeWidth="4.0" />
+                  <Line endX="-38.25" endY="-153.0" fill="#84ff0000" layoutX="579.0" layoutY="436.0" startX="88.75" startY="-47.0" strokeWidth="4.0" />
+                  <Line endX="134.75" endY="-29.000015258789062" layoutX="621.0" layoutY="353.0" startX="46.75" startY="36.0" strokeWidth="4.0" />
+                  <Line endX="89.75" endY="-59.00001525878906" layoutX="666.0" layoutY="383.0" startX="-125.25" startY="-99.99999237060547" strokeWidth="4.0" />
+                  <Line endX="154.57839965820312" endY="-167.17156982421875" layoutX="329.0" layoutY="560.0" startX="67.97299194335938" startY="-13.8006591796875" strokeWidth="4.0" />
+                  <Line endX="159.75" endY="80.0" layoutX="596.0" layoutY="446.0" startX="15.320556640625" startY="88.451416015625" strokeWidth="4.0" />
+                  <Button fx:id="placeBtn0" layoutX="88.0" layoutY="315.0" mnemonicParsing="false" onAction="#handleToNewYork" text="New York">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn7" layoutX="346.0" layoutY="533.0" mnemonicParsing="false" onAction="#handleToCancun" text="Cancun">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn3" layoutX="455.0" layoutY="388.0" mnemonicParsing="false" onAction="#handleToMadrid" text="Madrid">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn5" layoutX="196.0" layoutY="459.0" mnemonicParsing="false" onAction="#handleToChicago" text="Chicago">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn1" layoutX="514.0" layoutY="270.0" mnemonicParsing="false" onAction="#handleToLondon" text="London">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn8" layoutX="581.0" layoutY="524.0" mnemonicParsing="false" onAction="#handleToParis" text="Paris">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn4" layoutX="628.0" layoutY="388.0" mnemonicParsing="false" onAction="#handleToBerlin" text="Berlin">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn10" layoutX="321.0" layoutY="664.0" mnemonicParsing="false" onAction="#handleToNigeria" text="Nigeria">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn6" layoutX="23.0" layoutY="503.0" mnemonicParsing="false" onAction="#handleToSanFran" prefHeight="41.0" prefWidth="160.0" text="San Francisco">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn2" layoutX="747.0" layoutY="306.0" mnemonicParsing="false" onAction="#handleToMoscow" text="Mascow">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <Button fx:id="placeBtn9" layoutX="750.0" layoutY="508.0" mnemonicParsing="false" onAction="#handleToGeneva" text="Geneva">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Button>
+                  <ImageView fx:id="playerPinPointIV1" fitHeight="64.0" fitWidth="60.0" layoutX="109.0" layoutY="254.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV2" fitHeight="64.0" fitWidth="60.0" layoutX="515.0" layoutY="215.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV3" fitHeight="64.0" fitWidth="60.0" layoutX="762.0" layoutY="245.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV4" fitHeight="64.0" fitWidth="60.0" layoutX="454.0" layoutY="317.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV6" fitHeight="64.0" fitWidth="60.0" layoutX="223.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV5" fitHeight="64.0" fitWidth="60.0" layoutX="632.0" layoutY="321.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV7" fitHeight="64.0" fitWidth="60.0" layoutX="41.0" layoutY="422.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV8" fitHeight="64.0" fitWidth="60.0" layoutX="364.0" layoutY="476.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV9" fitHeight="64.0" fitWidth="60.0" layoutX="579.0" layoutY="459.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV10" fitHeight="64.0" fitWidth="60.0" layoutX="762.0" layoutY="447.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="playerPinPointIV11" fitHeight="64.0" fitWidth="60.0" layoutX="325.0" layoutY="590.0" pickOnBounds="true" preserveRatio="true" />
+                  <Button layoutX="692.0" layoutY="614.0" mnemonicParsing="false" text="Mongolia">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Button>
+                  <Label fx:id="oPNameL" layoutX="67.0" layoutY="34.0" text="Player2" textFill="#009940">
+                     <font>
+                        <Font size="29.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="919.0" layoutY="8.0" prefHeight="28.0" prefWidth="219.0" text="Messages received">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="oPTimeL" layoutX="60.0" layoutY="81.0" prefHeight="44.0" prefWidth="172.0" text="Turn Time:">
+                     <font>
+                        <Font size="31.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="sendTF" layoutX="541.0" layoutY="38.0" prefHeight="32.0" prefWidth="199.0" />
+                  <Label layoutX="550.0" layoutY="10.0" text="Send Message">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="sendMessBtn" layoutX="547.0" layoutY="85.0" mnemonicParsing="false" onAction="#handleSubText" text="submit" />
+                  <Accordion layoutX="877.0" layoutY="717.0" />
+                  <Label fx:id="lblMessages" layoutX="38.0" layoutY="19.0" prefHeight="17.0" prefWidth="337.0" text="Messages will appear here...CLIENT" />
+              <AnchorPane layoutX="999.0" layoutY="243.0" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ToolBar layoutX="27.0" layoutY="267.0" prefHeight="133.0" prefWidth="432.0" style="-fx-background-color: brown;">
+                          <items>
+                            <Button fx:id="controlBtn" mnemonicParsing="false" onAction="#handleControl" prefHeight="111.0" prefWidth="158.0" text="Control">
+                                 <font>
+                                    <Font name="Big Caslon Medium" size="33.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="waitBtn" mnemonicParsing="false" onAction="#handleWait" prefHeight="111.0" prefWidth="114.0" text="Wait">
+                                 <font>
+                                    <Font size="33.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="attackBtn" mnemonicParsing="false" onAction="#handleAttack" prefHeight="113.0" prefWidth="136.0" text="Attack">
+                                 <font>
+                                    <Font size="33.0" />
+                                 </font>
+                              </Button>
+                          </items>
+                        </ToolBar>
+                        <Label layoutX="29.0" layoutY="244.0" text="Main Controls: ">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="210.0" layoutY="98.0" text="Energy:">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="energyNumL" layoutX="214.0" layoutY="111.0" text="2">
+                           <font>
+                              <Font size="96.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="295.0" layoutY="115.0" prefHeight="27.0" prefWidth="112.0" text="APoint:">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="aPointL" layoutX="297.0" layoutY="137.0" text="0">
+                           <font>
+                              <Font size="51.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="mPTimeL" layoutX="128.0" layoutY="44.0" prefHeight="44.0" prefWidth="229.0" text="Turn Time:">
+                           <font>
+                              <Font size="31.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="mPNameL" layoutX="133.0" layoutY="9.0" text="Player1" textFill="#a30000">
+                           <font>
+                              <Font size="29.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <ListView fx:id="receivedLV" layoutX="917.0" layoutY="47.0" prefHeight="166.0" prefWidth="461.0" />
+                  <Label layoutX="1028.0" layoutY="646.0" text="Special Controls:">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <ToolBar layoutX="1025.0" layoutY="674.0" prefHeight="133.0" prefWidth="297.0" style="-fx-background-color: brown;">
+                     <items>
+                        <Button fx:id="locateBtn" mnemonicParsing="false" onAction="#handleLocate" prefHeight="111.0" prefWidth="158.0" text="Locate">
+                           <font>
+                              <Font name="Big Caslon Medium" size="33.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="planBtn" mnemonicParsing="false" onAction="#handlePlan" prefHeight="111.0" prefWidth="114.0" text="Plan">
+                           <font>
+                              <Font size="33.0" />
+                           </font>
+                        </Button>
+                     </items>
+                  </ToolBar>
+                  <AnchorPane fx:id="resultAP" layoutX="-3.0" prefHeight="1027.0" prefWidth="1527.0" style="-fx-background-color: Tan;" visible="false">
+                     <children>
+                        <Button fx:id="resultBtn" accessibleRole="NODE" layoutX="545.0" layoutY="68.0" mnemonicParsing="false" text="Win/Lose">
+                           <font>
+                              <Font size="78.0" />
+                           </font>
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Button>
+                        <Button fx:id="quitBtn" layoutX="465.0" layoutY="699.0" mnemonicParsing="false" onAction="#handleQuit" text="Quit">
+                           <font>
+                              <Font size="45.0" />
+                           </font>
+                           <effect>
+                              <Reflection />
+                           </effect>
+                        </Button>
+                        <Button fx:id="continueBtn" layoutX="821.0" layoutY="702.0" mnemonicParsing="false" onAction="#handleContinue" text="Continue">
+                           <font>
+                              <Font size="45.0" />
+                           </font>
+                           <effect>
+                              <Reflection />
+                           </effect>
+                        </Button>
+                        <Label layoutX="595.0" layoutY="252.0" text="First to 3 wins">
+                           <font>
+                              <Font size="54.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="MPRL" layoutX="390.0" layoutY="404.0" text="Player 1">
+                           <font>
+                              <Font size="36.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="OPRL" layoutX="946.0" layoutY="400.0" text="Player 2">
+                           <font>
+                              <Font size="36.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="MPwinsL" layoutX="378.0" layoutY="467.0" text="Wins: ">
+                           <font>
+                              <Font size="37.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="OPwinsL" layoutX="927.0" layoutY="465.0" text="Wins: ">
+                           <font>
+                              <Font size="37.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="readyAP" layoutX="-1.0" layoutY="-1.0" prefHeight="1094.0" prefWidth="1527.0" style="-fx-background-color: grey;">
+                     <children>
+                        <Label layoutX="504.0" layoutY="116.0" text="Undercover">
+                           <font>
+                              <Font size="96.0" />
+                           </font>
+                           <textFill>
+                              <LinearGradient endX="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color red="0.7171052694320679" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color red="1.0" green="1.0" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </LinearGradient>
+                           </textFill>
+                        </Label>
+                        <Label layoutX="928.0" layoutY="220.0" text="Game" textFill="#ff7373">
+                           <font>
+                              <Font size="42.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="ready" layoutX="639.0" layoutY="486.0" mnemonicParsing="false" onAction="#handleReady" text="Ready?">
+                           <font>
+                              <Font size="49.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="finalResultAP" layoutX="-4.0" prefHeight="1027.0" prefWidth="1528.0" style="-fx-background-color: pink;" visible="false">
+                     <children>
+                        <Label fx:id="finalResultL" layoutX="663.0" layoutY="135.0" text="winner">
+                           <font>
+                              <Font size="81.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="battleWonL" layoutX="557.0" layoutY="291.0" text="Battles Won:">
+                           <font>
+                              <Font size="39.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="okayBtn" layoutX="684.0" layoutY="675.0" mnemonicParsing="false" onAction="#handleOkay" text="Okay">
+                           <font>
+                              <Font size="50.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="otherTurnAP" layoutY="224.0" opacity="0.36" prefHeight="806.0" prefWidth="1562.0" style="-fx-background-color: black;" visible="false" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
