@@ -317,7 +317,7 @@
                         </Label>
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="readyAP" prefHeight="980.0" prefWidth="1566.0" style="-fx-background-color: grey;" visible="false">
+                  <AnchorPane fx:id="readyAP" prefHeight="980.0" prefWidth="1566.0" style="-fx-background-color: grey;" visible="true">
                      <children>
                         <Label layoutX="504.0" layoutY="116.0" text="Undercover">
                            <font>

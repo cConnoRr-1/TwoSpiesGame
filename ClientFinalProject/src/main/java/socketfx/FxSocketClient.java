@@ -102,7 +102,9 @@ public class FxSocketClient extends GenericSocket
             if (debugFlagIsSet(Constants.instance().DEBUG_EXCEPTIONS)) {
                 e.printStackTrace();
             }
-            throw new SocketException();
+            SocketException se = new SocketException(e.getMessage());
+            se.initCause(e);
+            throw se;
         }
     }
 

@@ -187,6 +187,7 @@ public abstract class GenericSocket implements SocketListener {
             try {
                 wait();
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -207,6 +208,7 @@ public abstract class GenericSocket implements SocketListener {
      * @param msg The String message to send
      */
     public void sendMessage(String msg) {
+        if (output == null) return;
         try {
             output.write(msg, 0, msg.length());
             output.newLine();

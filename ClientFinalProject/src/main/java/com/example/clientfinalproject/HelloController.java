@@ -1,7 +1,7 @@
 package com.example.clientfinalproject;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,12 +48,23 @@ public class HelloController implements Initializable {
         DISCONNECTED, WAITING, CONNECTED, AUTOCONNECTED, AUTOWAITING
     }
     private FxSocketClient socket;
+
+    private void safeSend(String msg) {
+        if (socket != null) socket.sendMessage(msg);
+    }
+
     private void connect() {
-        socket = new FxSocketClient(new FxSocketListener(),
-                hostTextField.getText(),
-                Integer.valueOf(portTextField.getText()),
-                Constants.instance().DEBUG_NONE);
-        socket.connect();
+        try {
+            int port = Integer.parseInt(portTextField.getText().trim());
+            socket = new FxSocketClient(new FxSocketListener(),
+                    hostTextField.getText(),
+                    port,
+                    Constants.instance().DEBUG_NONE);
+            socket.connect();
+        } catch (NumberFormatException e) {
+            LOGGER.warning("Invalid port: " + portTextField.getText());
+            if (connectButton != null) connectButton.setDisable(false);
+        }
     }
     private void displayState(ConnectionDisplayState state) {
     }
@@ -81,55 +92,55 @@ public class HelloController implements Initializable {
     }
     @FXML
     public void handleControl(){
-        socket.sendMessage("controlOP");
+        safeSend("controlOP");
     }
     @FXML
     public void handleToNewYork(){
-        socket.sendMessage("chOP" + 0);
+        safeSend("chOP" + 0);
     }
     @FXML
     public void handleToLondon(){
-        socket.sendMessage("chOP" + 1);
+        safeSend("chOP" + 1);
     }
     @FXML
     public void handleToMoscow(){
-        socket.sendMessage("chOP" + 2);
+        safeSend("chOP" + 2);
     }
     @FXML
     public void handleToMadrid(){
-        socket.sendMessage("chOP" + 3);
+        safeSend("chOP" + 3);
     }
     @FXML
     public void handleToBerlin(){
-        socket.sendMessage("chOP" + 4);
+        safeSend("chOP" + 4);
     }
     @FXML
     public void handleToChicago(){
-        socket.sendMessage("chOP" + 5);
+        safeSend("chOP" + 5);
     }
     @FXML
     public void handleToSanFran(){
-        socket.sendMessage("chOP" + 6);
+        safeSend("chOP" + 6);
     }
     @FXML
     public void handleToCancun(){
-        socket.sendMessage("chOP" + 7);
+        safeSend("chOP" + 7);
     }
     @FXML
     public void handleToParis(){
-        socket.sendMessage("chOP" + 8);
+        safeSend("chOP" + 8);
     }
     @FXML
     public void handleToGeneva(){
-        socket.sendMessage("chOP" + 9);
+        safeSend("chOP" + 9);
     }
     @FXML
     public void handleToNigeria(){
-        socket.sendMessage("chOP" + 10);
+        safeSend("chOP" + 10);
     }
     @FXML
     public void handleSubText(){
-        socket.sendMessage("message" + sendTF.getText());
+        if (sendTF != null) safeSend("message" + sendTF.getText());
     }
     @FXML
     public void handleQuit(){
@@ -137,12 +148,12 @@ public class HelloController implements Initializable {
         readyAP.setVisible(true);
         readyBtn.setDisable(false);
         areReady = false;
-        socket.sendMessage("quitOP");
+        safeSend("quitOP");
     }
     @FXML
     public void handleContinue(){
         areReady=true;
-        socket.sendMessage("continue");
+        safeSend("continue");
         if (serverReady){
             resultAP.setVisible(false);
             resetPage();
@@ -160,23 +171,23 @@ public class HelloController implements Initializable {
     }
     @FXML
     public void handleLocate(){
-        socket.sendMessage("locateOP");
+        safeSend("locateOP");
     }
     @FXML
     public void handlePlan(){
-        socket.sendMessage("planOP");
+        safeSend("planOP");
     }
     @FXML
     public void handleWait(){
-        socket.sendMessage("waitOP");
+        safeSend("waitOP");
     }
     @FXML
     public void handleAttack(){
-        socket.sendMessage("attackOP");
+        safeSend("attackOP");
     }
     public void handleStart(){
         disImage("src/main/resources/images/worldMap.jpg");
-        mapIV.setImage(image);
+        if (mapIV != null && image != null) mapIV.setImage(image);
         resetPage();
         playerMP = new Player();
         playerOP = new Player();
@@ -186,7 +197,7 @@ public class HelloController implements Initializable {
         @Override
         public void onMessage(String line) {
             System.out.println("message received server");
-            lblMessages.setText(line);
+            if (lblMessages != null) lblMessages.setText(line);
             if (line.equals("ready") && areReady){
                 readyAP.setVisible(false);
                 handleStart();
@@ -214,30 +225,30 @@ public class HelloController implements Initializable {
             } else if (line.startsWith("POPCol")){
                 playerOP.setColor(line.substring(6));
             }
-            else if(line.startsWith("POPCLIn")){
-                playerOP.setCurrentPosition(Integer.parseInt(line.substring(7)));
-            } else if (line.startsWith("PMPCLIn")){
-                playerMP.setCurrentPosition(Integer.parseInt(line.substring(7)));
-            }else if(line.startsWith("POPWins")){
-                playerOP.setWinsNum(Integer.parseInt(line.substring(7)));
-            } else if (line.startsWith("PMPWins")){
-                playerMP.setWinsNum(Integer.parseInt(line.substring(7)));
-            }else if(line.startsWith("POPE")){
-                playerOP.setEnergy(Integer.parseInt(line.substring(4)));
-            } else if (line.startsWith("POPIP")){
-                playerOP.setIntelPoints(Integer.parseInt(line.substring(5)));
-            }else if(line.startsWith("PMPE")){
-                playerMP.setEnergy(Integer.parseInt(line.substring(4)));
-            } else if (line.startsWith("PMPIP")){
-                playerMP.setIntelPoints(Integer.parseInt(line.substring(5)));
+            else if(line.startsWith("POPCLIn") && line.length() > 7){
+                try { playerOP.setCurrentPosition(Integer.parseInt(line.substring(7))); } catch (NumberFormatException ignored) {}
+            } else if (line.startsWith("PMPCLIn") && line.length() > 7){
+                try { playerMP.setCurrentPosition(Integer.parseInt(line.substring(7))); } catch (NumberFormatException ignored) {}
+            }else if(line.startsWith("POPWins") && line.length() > 7){
+                try { playerOP.setWinsNum(Integer.parseInt(line.substring(7))); } catch (NumberFormatException ignored) {}
+            } else if (line.startsWith("PMPWins") && line.length() > 7){
+                try { playerMP.setWinsNum(Integer.parseInt(line.substring(7))); } catch (NumberFormatException ignored) {}
+            }else if(line.startsWith("POPE") && line.length() > 4){
+                try { playerOP.setEnergy(Integer.parseInt(line.substring(4))); } catch (NumberFormatException ignored) {}
+            } else if (line.startsWith("POPIP") && line.length() > 5){
+                try { playerOP.setIntelPoints(Integer.parseInt(line.substring(5))); } catch (NumberFormatException ignored) {}
+            }else if(line.startsWith("PMPE") && line.length() > 4){
+                try { playerMP.setEnergy(Integer.parseInt(line.substring(4))); } catch (NumberFormatException ignored) {}
+            } else if (line.startsWith("PMPIP") && line.length() > 5){
+                try { playerMP.setIntelPoints(Integer.parseInt(line.substring(5))); } catch (NumberFormatException ignored) {}
             }
             else if(line.startsWith("chOP")){
-                displayPlayerPosition(playerOP);
+                if (playerOP != null) displayPlayerPosition(playerOP);
             }else if (line.equals("disPOP")){
-                displayPlayerPosition(playerOP);
+                if (playerOP != null) displayPlayerPosition(playerOP);
             }
             else if (line.equals("disPMP")){
-                displayPlayerPosition(playerMP);
+                if (playerMP != null) displayPlayerPosition(playerMP);
             }else if(line.equals("OPTurn")){
                 receivedLV.getItems().add("Player2 turn");
                 otherTurnAP.setVisible(false);
@@ -246,15 +257,17 @@ public class HelloController implements Initializable {
                 receivedLV.getItems().add("Player1 turn");
                 otherTurnAP.setVisible(true);
 
-            }else if(line.equals("controlMP")){
-                placeBtn.get(playerMP.getCurrentPIMNum()).setStyle("-fx-background-color: "+ playerMP.getColor());
+            }else if(line.equals("controlMP") && playerMP != null && !placeBtn.isEmpty()){
+                int idx = playerMP.getCurrentPIMNum();
+                if (idx >= 0 && idx < placeBtn.size()) placeBtn.get(idx).setStyle("-fx-background-color: "+ playerMP.getColor());
                 displayPlayerPosition(playerMP);
-            }else if(line.equals("controlOP")){
-                placeBtn.get(playerOP.getCurrentPIMNum()).setStyle("-fx-background-color: "+ playerOP.getColor());
+            }else if(line.equals("controlOP") && playerOP != null && !placeBtn.isEmpty()){
+                int idx = playerOP.getCurrentPIMNum();
+                if (idx >= 0 && idx < placeBtn.size()) placeBtn.get(idx).setStyle("-fx-background-color: "+ playerOP.getColor());
                 displayPlayerPosition(playerOP);
             }else if(line.startsWith("message")){
                 receivedLV.getItems().add(line.substring(7));
-            }else if(line.startsWith("result")){
+            }else if(line.startsWith("result") && playerMP != null && playerOP != null){
                 resultAP.setVisible(true);
                 MPwinsL.setText("Wins: " + playerMP.getWinsNum());
                 OPwinsL.setText("Wins: " + playerOP.getWinsNum());
@@ -267,7 +280,7 @@ public class HelloController implements Initializable {
                 finalResultAP.setVisible(true);
                 otherTurnAP.setVisible(false);
                 finalResultL.setText(line.substring(11));
-            }else if(line.equals("update")){
+            }else if(line.equals("update") && playerOP != null){
                 energyNumL.setText(String.valueOf(playerOP.getEnergy()));
                 aPointL.setText(String.valueOf(playerOP.getIntelPoints()));
             }else if(line.startsWith("showTimeMP")){
@@ -282,10 +295,11 @@ public class HelloController implements Initializable {
             }else if(line.startsWith("battleWonOP")){
                 gamesWonL.setText("Games Won: " + line.substring(11));
                 battleWonL.setText("Missions Won: " + line.substring(11));
-            }else if(line.equals("samePlace")){
+            }else if(line.equals("samePlace") && playerOP != null && !playerPins.isEmpty()){
                 disImage("src/main/resources/images/both.png");
-                playerPins.get(playerOP.getPreviousLocation()).setImage(null);
-                playerPins.get(playerOP.getCurrentPIMNum()).setImage(image);
+                int prev = playerOP.getPreviousLocation(), curr = playerOP.getCurrentPIMNum();
+                if (prev >= 0 && prev < playerPins.size()) playerPins.get(prev).setImage(null);
+                if (curr >= 0 && curr < playerPins.size()) playerPins.get(curr).setImage(image);
             }
         }
         @Override
@@ -294,18 +308,20 @@ public class HelloController implements Initializable {
         }
     }
     public void disImage(String p){
-        try {
-            temp = new FileInputStream(p);
+        if (p == null || p.isEmpty()) return;
+        try (FileInputStream temp = new FileInputStream(p)) {
             image = new Image(temp);
-        }catch (FileNotFoundException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public void displayPlayerPosition(Player p){
-        System.out.println(p.getPlayerImageN());
-        disImage(p.getPlayerImageN());
-        playerPins.get(p.getPreviousLocation()).setImage(null);
-        playerPins.get(p.getCurrentPIMNum()).setImage(image);
+        if (p == null || playerPins.isEmpty()) return;
+        String imgPath = p.getPlayerImageN();
+        if (imgPath != null) disImage(imgPath);
+        int prev = p.getPreviousLocation(), curr = p.getCurrentPIMNum();
+        if (prev >= 0 && prev < playerPins.size()) playerPins.get(prev).setImage(null);
+        if (curr >= 0 && curr < playerPins.size()) playerPins.get(curr).setImage(image);
     }
     public void resetPage(){
         playerPins.clear();
@@ -348,7 +364,7 @@ public class HelloController implements Initializable {
 //            System.out.println("sent message client");
 //        }
         areReady=true;
-        socket.sendMessage("ready");
+        safeSend("ready");
         if (serverReady){
             readyAP.setVisible(false);
             handleStart();
@@ -364,7 +380,6 @@ public class HelloController implements Initializable {
     }
     private Player playerMP;
     private Player playerOP;
-    FileInputStream temp;
     private Image image;
     @FXML
     private ImageView mapIV, playerPinPointIV1, playerPinPointIV2,

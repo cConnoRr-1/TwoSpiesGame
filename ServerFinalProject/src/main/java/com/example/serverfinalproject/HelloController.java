@@ -1,8 +1,7 @@
 package com.example.serverfinalproject;
 
-import java.awt.*;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,8 +25,6 @@ import javafx.scene.layout.AnchorPane;
 import socketfx.Constants;
 import socketfx.FxSocketServer;
 import socketfx.SocketListener;
-
-import static java.awt.Color.RED;
 
 public class HelloController implements Initializable {
     boolean areReady = false;
@@ -59,11 +56,21 @@ public class HelloController implements Initializable {
 
     private FxSocketServer socket;
 
+    private void safeSend(String msg) {
+        if (socket != null) socket.sendMessage(msg);
+    }
+
     private void connect() {
-        socket = new FxSocketServer(new FxSocketListener(),
-                Integer.valueOf(portTextField.getText()),
-                Constants.instance().DEBUG_NONE);
-        socket.connect();
+        try {
+            int port = Integer.parseInt(portTextField.getText().trim());
+            socket = new FxSocketServer(new FxSocketListener(),
+                    port,
+                    Constants.instance().DEBUG_NONE);
+            socket.connect();
+        } catch (NumberFormatException e) {
+            LOGGER.warning("Invalid port: " + portTextField.getText());
+            if (connectButton != null) connectButton.setDisable(false);
+        }
     }
 
     private void displayState(ConnectionDisplayState state) {
@@ -96,9 +103,8 @@ public class HelloController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         isConnected = false;
         displayState(ConnectionDisplayState.DISCONNECTED);
-
-
-
+        if (readyAP != null) readyAP.setVisible(true);
+        if (ready != null) ready.setDisable(false);
 
         Runtime.getRuntime().addShutdownHook(new ShutDownThread());
 
@@ -135,13 +141,14 @@ public class HelloController implements Initializable {
         public void onMessage(String line) {
             System.out.println("message received client");
             lblMessages.setText(line);
-            if (line.equals("ready") && areReady){
-                readyAP.setVisible(false);
+            if (line.equals("ready") && areReady) {
+                if (readyAP != null) readyAP.setVisible(false);
                 handleStart();
                 disPosClient();
-            }else if(line.equals("ready")){
-                clientReady=true;
-            }if (line.equals("continue") && areReady){
+            } else if (line.equals("ready")) {
+                clientReady = true;
+            }
+            if (line.equals("continue") && areReady) {
                 resultAP.setVisible(false);
                 resultAP.setDisable(false);
                 reset();
@@ -193,20 +200,20 @@ public class HelloController implements Initializable {
     }
     @FXML
     public void handleSubText(){
-        if (!sendTF.getText().equals(null)){
-            socket.sendMessage("message" + sendTF.getText());
+        if (sendTF != null && socket != null && !sendTF.getText().isEmpty()){
+            safeSend("message" + sendTF.getText());
         }
     }
     public void disImage(String p){
-        try {
-            temp = new FileInputStream(p);
+        if (p == null || p.isEmpty()) return;
+        try (FileInputStream temp = new FileInputStream(p)) {
             image = new Image(temp);
-        }catch (FileNotFoundException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public void handleStart(){
-        disImage("src/main/resources/Images/worldMap.jpg");
+        disImage("src/main/resources/images/worldMap.jpg");
         playerPins = new ArrayList<>();
         resetPage();
         playerMP = new Player("Player1", "Red");
@@ -268,8 +275,8 @@ public class HelloController implements Initializable {
         mapIV.setImage(image);
         initializePlayer();
         sendClientInfo();
-        socket.sendMessage("POPCLIn" + playerOP.getCurrentPIMNum());
-        socket.sendMessage("PMPCLIn" + playerMP.getCurrentPIMNum());
+        safeSend("POPCLIn" + playerOP.getCurrentPIMNum());
+        safeSend("PMPCLIn" + playerMP.getCurrentPIMNum());
         displayPlayerPosition(playerMP);
         displayPlayerPosition(playerOP);
         startTime = System.nanoTime();
@@ -302,10 +309,10 @@ public class HelloController implements Initializable {
     public void showTime(){
         if(checkTurn()){
             mPTimeL.setText("Turn time: "+playerMP.getPlayerTime());
-            socket.sendMessage("showTimeMP" + playerMP.getPlayerTime() );
+            safeSend("showTimeMP" + playerMP.getPlayerTime() );
         }else {
             oPTimeL.setText("Turn time: "+playerOP.getPlayerTime());
-            socket.sendMessage("showTimeOP" + playerOP.getPlayerTime() );
+            safeSend("showTimeOP" + playerOP.getPlayerTime() );
         }
     }
     public void initializePlayer(){
@@ -325,22 +332,22 @@ public class HelloController implements Initializable {
         playerOP.getControlledPositions().clear();
     }
     public void disPosClient(){
-        socket.sendMessage("disPOP");
-        socket.sendMessage("disPMP");
+        safeSend("disPOP");
+        safeSend("disPMP");
     }
     public void sendClientInfo(){
-        socket.sendMessage("POPImNam" + playerOP.getPlayerImageN());
-        socket.sendMessage("POPNam" + playerOP.getName());
-        socket.sendMessage("PMPImNam" + playerMP.getPlayerImageN());
-        socket.sendMessage("PMPNam" + playerMP.getName());
-        socket.sendMessage("PMPCol" + playerMP.getColor());
-        socket.sendMessage("POPCol" + playerOP.getColor());
-        socket.sendMessage("POPWins" + playerOP.getWinsNum());
-        socket.sendMessage("PMPWins" + playerMP.getWinsNum());
-        socket.sendMessage("POPE" + playerOP.getEnergy());
-        socket.sendMessage("POPIP" + playerOP.getIntelPoints());
-        socket.sendMessage("PMPE" + playerMP.getEnergy());
-        socket.sendMessage("PMPIP" + playerMP.getIntelPoints());
+        safeSend("POPImNam" + playerOP.getPlayerImageN());
+        safeSend("POPNam" + playerOP.getName());
+        safeSend("PMPImNam" + playerMP.getPlayerImageN());
+        safeSend("PMPNam" + playerMP.getName());
+        safeSend("PMPCol" + playerMP.getColor());
+        safeSend("POPCol" + playerOP.getColor());
+        safeSend("POPWins" + playerOP.getWinsNum());
+        safeSend("PMPWins" + playerMP.getWinsNum());
+        safeSend("POPE" + playerOP.getEnergy());
+        safeSend("POPIP" + playerOP.getIntelPoints());
+        safeSend("PMPE" + playerMP.getEnergy());
+        safeSend("PMPIP" + playerMP.getIntelPoints());
     }
     @FXML
     public void handleToNewYork(){
@@ -414,19 +421,19 @@ public class HelloController implements Initializable {
         readyAP.setVisible(true);
         ready.setDisable(false);
         areReady = false;
-        socket.sendMessage("quitMP");
+        safeSend("quitMP");
     }
     @FXML
     public void handleContinue(){
         areReady=true;
-        socket.sendMessage("continue");
+        safeSend("continue");
         if (clientReady){
             resultAP.setVisible(false);
             resultAP.setDisable(false);
             reset();
             sendClientInfo();
-            socket.sendMessage("POPCLIn" + playerOP.getCurrentPIMNum());
-            socket.sendMessage("PMPCLIn" + playerMP.getCurrentPIMNum());
+            safeSend("POPCLIn" + playerOP.getCurrentPIMNum());
+            safeSend("PMPCLIn" + playerMP.getCurrentPIMNum());
             disPosClient();
         }else{
             resultAP.setDisable(true);
@@ -442,7 +449,7 @@ public class HelloController implements Initializable {
         if(playerMP.getIntelPoints()>= actions.get(5).getAbilityCost()) {
             MPSelAb = actions.get(5);
             bonusES = 1;
-            socket.sendMessage("messageAn attack is being planned!");
+            safeSend("messageAn attack is being planned!");
             managePointS();
             updatePage();
         }else{
@@ -457,7 +464,7 @@ public class HelloController implements Initializable {
             managePointC();
             updatePage();
         }else{
-            socket.sendMessage("messageNot enough intelPoints!");
+            safeSend("messageNot enough intelPoints!");
         }
     }
     @FXML
@@ -470,7 +477,7 @@ public class HelloController implements Initializable {
         if(playerMP.getIntelPoints()>= actions.get(4).getAbilityCost()) {
             MPSelAb = actions.get(4);
             displayPlayerPosition(playerOP);
-            socket.sendMessage("messageYou have been located!");
+            safeSend("messageYou have been located!");
             managePointS();
             updatePage();
         }else{
@@ -480,31 +487,31 @@ public class HelloController implements Initializable {
     public void locateC(){
         if(playerOP.getIntelPoints()>= actions.get(4).getAbilityCost()) {
             OPSelAb = actions.get(4);
-            socket.sendMessage("PMPCLIn" + playerMP.getCurrentPIMNum());
-            socket.sendMessage("disPMP");
+            safeSend("PMPCLIn" + playerMP.getCurrentPIMNum());
+            safeSend("disPMP");
             receivedLV.getItems().add("You have been discovered!");
             managePointC();
             updatePage();
         }else{
-            socket.sendMessage("messageNot enough intelPoints!");
+            safeSend("messageNot enough intelPoints!");
         }
     }
     public void controlS(){
         MPSelAb = actions.get(1);
         if(!playerMP.checkIfControlled(playerMP.getCurrentPIMNum())) {
-            if (playerOP.checkIfControlled(playerMP.getCurrentPIMNum())) {
-                playerOP.getControlledPositions().remove(playerMP.getCurrentPIMNum());
+                if (playerOP.checkIfControlled(playerMP.getCurrentPIMNum())) {
+                playerOP.getControlledPositions().remove(Integer.valueOf(playerMP.getCurrentPIMNum()));
                 playerMP.setControlledPositions(playerMP.getCurrentPIMNum());
                 placeBtn.get(playerMP.getCurrentPIMNum()).setStyle("-fx-background-color: red");
                 sendClientInfo();
-                socket.sendMessage("PMPCLIn" + playerMP.getCurrentPIMNum());
-                socket.sendMessage("controlMP");
+                safeSend("PMPCLIn" + playerMP.getCurrentPIMNum());
+                safeSend("controlMP");
             }else{
                 playerMP.setControlledPositions(playerMP.getCurrentPIMNum());
                 placeBtn.get(playerMP.getCurrentPIMNum()).setStyle("-fx-background-color: red");
                 sendClientInfo();
-                socket.sendMessage("PMPCLIn" + playerMP.getCurrentPIMNum());
-                socket.sendMessage("controlMP");
+                safeSend("PMPCLIn" + playerMP.getCurrentPIMNum());
+                safeSend("controlMP");
             }
         }
         managePointS();
@@ -513,19 +520,19 @@ public class HelloController implements Initializable {
     public void controlC(){
         OPSelAb = actions.get(1);
         if(!playerOP.checkIfControlled(playerOP.getCurrentPIMNum())) {
-            if (playerMP.checkIfControlled(playerMP.getCurrentPIMNum())) {
-                playerMP.getControlledPositions().remove(playerMP.getCurrentPIMNum());
+            if (playerMP.checkIfControlled(playerOP.getCurrentPIMNum())) {
+                playerMP.getControlledPositions().remove(Integer.valueOf(playerOP.getCurrentPIMNum()));
                 playerOP.setControlledPositions(playerOP.getCurrentPIMNum());
                 placeBtn.get(playerOP.getCurrentPIMNum()).setStyle("-fx-background-color: green");
                 sendClientInfo();
-                socket.sendMessage("POPCLIn" + playerOP.getCurrentPIMNum());
-                socket.sendMessage("controlOP");
+                safeSend("POPCLIn" + playerOP.getCurrentPIMNum());
+                safeSend("controlOP");
             }else{
                 playerOP.setControlledPositions(playerOP.getCurrentPIMNum());
                 placeBtn.get(playerOP.getCurrentPIMNum()).setStyle("-fx-background-color: green");
                 sendClientInfo();
-                socket.sendMessage("POPCLIn" + playerOP.getCurrentPIMNum());
-                socket.sendMessage("controlOP");
+                safeSend("POPCLIn" + playerOP.getCurrentPIMNum());
+                safeSend("controlOP");
             }
         }
         managePointC();
@@ -561,8 +568,8 @@ public class HelloController implements Initializable {
             playerOP.setEliminated(true);
             playerMP.setWinsNum(playerMP.getWinsNum()+1);
         }else{
-            socket.sendMessage("disPMP");
-            socket.sendMessage("message" + "Attack has been attempted!");
+            safeSend("disPMP");
+            safeSend("message" + "Attack has been attempted!");
         }
         sendClientInfo();
         managePointS();
@@ -576,7 +583,7 @@ public class HelloController implements Initializable {
             playerOP.setWinsNum(playerOP.getWinsNum()+1);
             receivedLV.getItems().add("Attack has been attempted!");
         }else{
-            socket.sendMessage("message" + "Attack failed!");
+            safeSend("message" + "Attack failed!");
             displayPlayerPosition(playerOP);
         }
         sendClientInfo();
@@ -597,8 +604,8 @@ public class HelloController implements Initializable {
             OPbattleWon++;
             finalResultAP.setVisible(true);
             finalResultL.setText("Lost");
-            socket.sendMessage("battleWonOP" + OPbattleWon);
-            socket.sendMessage("finalResultWinner");
+            safeSend("battleWonOP" + OPbattleWon);
+            safeSend("finalResultWinner");
             battleWonL.setText("Missions Won: "+String.valueOf(MPbattleWon));
             gamesWonL.setText("Games Won: " +String.valueOf(MPbattleWon));
             areReady = false;
@@ -609,8 +616,8 @@ public class HelloController implements Initializable {
             MPbattleWon++;
             finalResultAP.setVisible(true);
             finalResultL.setText("Winner");
-            socket.sendMessage("battleWonOP" + OPbattleWon);
-            socket.sendMessage("finalResultLose");
+            safeSend("battleWonOP" + OPbattleWon);
+            safeSend("finalResultLose");
             battleWonL.setText("Missions Won: "+String.valueOf(MPbattleWon));
             gamesWonL.setText("Games Won: " + String.valueOf(MPbattleWon));
             areReady = false;
@@ -623,7 +630,7 @@ public class HelloController implements Initializable {
             MPwinsL.setText("Wins: "+ playerMP.getWinsNum());
             OPwinsL.setText("Wins: " + playerOP.getWinsNum());
             sendClientInfo();
-            socket.sendMessage("resultWin");
+            safeSend("resultWin");
             areReady = false;
             clientReady = false;
             otherTurnAP.setVisible(false);
@@ -635,7 +642,7 @@ public class HelloController implements Initializable {
             MPwinsL.setText("Wins: "+ playerMP.getWinsNum());
             OPwinsL.setText("Wins: " + playerOP.getWinsNum());
             sendClientInfo();
-            socket.sendMessage("resultLost");
+            safeSend("resultLost");
             areReady = false;
             clientReady = false;
             otherTurnAP.setVisible(false);
@@ -648,8 +655,8 @@ public class HelloController implements Initializable {
         switchTurnTime();
         initializePlayer();
         sendClientInfo();
-        socket.sendMessage("POPCLIn" + playerOP.getCurrentPIMNum());
-        socket.sendMessage("PMPCLIn" + playerMP.getCurrentPIMNum());
+        safeSend("POPCLIn" + playerOP.getCurrentPIMNum());
+        safeSend("PMPCLIn" + playerMP.getCurrentPIMNum());
         displayPlayerPosition(playerMP);
         displayPlayerPosition(playerOP);
         updatePage();
@@ -689,24 +696,25 @@ public class HelloController implements Initializable {
     }
     @FXML
     private void handleSendMessageButton(ActionEvent event) {
-        if (!sendTextField.getText().equals("")) {
-            socket.sendMessage(sendTextField.getText());
+        if (sendTextField != null && !sendTextField.getText().isEmpty()) {
+            safeSend(sendTextField.getText());
             System.out.println("Message sent client");
         }
     }
     @FXML
-    private void handleReady(ActionEvent event) {
-        areReady=true;
-        socket.sendMessage("ready");
+    public void handleReady(ActionEvent event) {
+        if (readyAP == null || ready == null) return;
+        areReady = true;
+        safeSend("ready");
 
-        if (clientReady){
+        if (clientReady) {
             readyAP.setVisible(false);
             handleStart();
             sendClientInfo();
-            socket.sendMessage("POPCLIn" + playerOP.getCurrentPIMNum());
-            socket.sendMessage("PMPCLIn" + playerMP.getCurrentPIMNum());
+            safeSend("POPCLIn" + playerOP.getCurrentPIMNum());
+            safeSend("PMPCLIn" + playerMP.getCurrentPIMNum());
             disPosClient();
-        }else{
+        } else {
             ready.setDisable(true);
         }
     }
@@ -714,7 +722,7 @@ public class HelloController implements Initializable {
         System.out.println(p.getPlayerImageN());
         if(playerMP.getCurrentPIMNum() == playerOP.getCurrentPIMNum()) {
             disImage("src/main/resources/images/both.png");
-            socket.sendMessage("samePlace");
+            safeSend("samePlace");
             playerPins.get(p.getPreviousLocation()).setImage(null);
             playerPins.get(p.getCurrentPIMNum()).setImage(image);
         }else{
@@ -729,8 +737,8 @@ public class HelloController implements Initializable {
             playerMP.setCurrentPosition(PIMNum);
             if(playerOP.checkIfControlled(playerMP.getCurrentPIMNum())){
                 sendClientInfo();
-                socket.sendMessage("PMPCLIn" + playerMP.getCurrentPIMNum());
-                socket.sendMessage("disPMP");
+                safeSend("PMPCLIn" + playerMP.getCurrentPIMNum());
+                safeSend("disPMP");
             }
             if((int)(Math.random()*100)+1 <15){
                 bonus = 5;
@@ -738,8 +746,8 @@ public class HelloController implements Initializable {
             displayPlayerPosition(playerMP);
             managePointS();
             bonus = 0;
-            socket.sendMessage("messageplayer1 on the move");
-//            socket.sendMessage("chMP" +PIMNum);
+            safeSend("messageplayer1 on the move");
+//            safeSend("chMP" +PIMNum);
         }else{
             warningCantDo(playerMP);
         }
@@ -749,7 +757,7 @@ public class HelloController implements Initializable {
         if (checkIfCanGo(playerOP, clickedP)) {
             playerOP.setCurrentPosition(clickedP);
             playerOP.setCurrentPosition(PIMNum);
-            if(playerOP.checkIfControlled(playerMP.getCurrentPIMNum())){
+            if(playerMP.checkIfControlled(playerOP.getCurrentPIMNum())){
                 displayPlayerPosition(playerOP);
             }
             if((int)(Math.random()*100)+1 <15){
@@ -758,13 +766,13 @@ public class HelloController implements Initializable {
             if(playerMP.getCurrentPIMNum() == playerOP.getCurrentPIMNum()){
                 managePointC();
                 sendClientInfo();
-                socket.sendMessage("POPCLIn" + playerOP.getCurrentPIMNum());
-                socket.sendMessage("samePlace");
+                safeSend("POPCLIn" + playerOP.getCurrentPIMNum());
+                safeSend("samePlace");
             }else {
                 managePointC();
                 sendClientInfo();
-                socket.sendMessage("POPCLIn" + playerOP.getCurrentPIMNum());
-                socket.sendMessage("chOP" + PIMNum);
+                safeSend("POPCLIn" + playerOP.getCurrentPIMNum());
+                safeSend("chOP" + PIMNum);
                 receivedLV.getItems().add("player2 on the move");
             }
         }else{
@@ -776,7 +784,7 @@ public class HelloController implements Initializable {
         energyNumL.setText(String.valueOf(playerMP.getEnergy()));
         aPointL.setText(String.valueOf(playerMP.getIntelPoints()));
         sendClientInfo();
-        socket.sendMessage("update");
+        safeSend("update");
     }
     public void managePointS(){
         playerMP.setEnergy(playerMP.getEnergy()-1);
@@ -803,7 +811,7 @@ public class HelloController implements Initializable {
         if(p.equals(playerMP)){
             receivedLV.getItems().add("can't do it");
         }else{
-            socket.sendMessage("NPC");
+            safeSend("NPC");
         }
     }
     public boolean checkIfCanGo(Player p, Position clickedP){
@@ -839,7 +847,7 @@ public class HelloController implements Initializable {
             playerMP.setEnergy(2+ bonusES);
             receivedLV.getItems().add("player2 turn");
             otherTurnAP.setVisible(true);
-            socket.sendMessage("OPTurn");
+            safeSend("OPTurn");
         }
         bonusES = 0;
         updatePage();
@@ -851,7 +859,7 @@ public class HelloController implements Initializable {
             playerOP.setEnergy(2+bonusEC);
             otherTurnAP.setVisible(false);
             receivedLV.getItems().add("player1 turn");
-            socket.sendMessage("MPTurn");
+            safeSend("MPTurn");
         }
         bonusEC = 0;
         updatePage();
@@ -862,12 +870,12 @@ public class HelloController implements Initializable {
             playerTurn++;
             receivedLV.getItems().add("player2 turn");
             otherTurnAP.setVisible(true);
-            socket.sendMessage("OPTurn");
+            safeSend("OPTurn");
         }else{
             returnPlayerTurn().setEnergy(2+bonusEC);
             playerTurn++;
             otherTurnAP.setVisible(false);
-            socket.sendMessage("MPTurn");
+            safeSend("MPTurn");
             receivedLV.getItems().add("player1 turn");
         }
     }
@@ -875,7 +883,6 @@ public class HelloController implements Initializable {
     private int OPbattleWon = 0;
     private int bonusES = 0;
     private int bonusEC = 0;
-    FileInputStream temp;
     private Image image;
     @FXML
     private ImageView mapIV, playerPinPointIV1, playerPinPointIV2,
